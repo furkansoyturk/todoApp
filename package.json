@@ -1,0 +1,14 @@
+{
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "Electron todo app for traning",
+  "main": "index.js",
+  "scripts": {
+    "electron": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^9.0.3"
+  }
+}
