@@ -1,12 +1,12 @@
 const electron = require('electron');
 
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 let mainWindow;
 let addWindow;
 
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({});
+    mainWindow = new BrowserWindow({ webPreferences: { nodeIntegration: true } });
     mainWindow.loadURL(`file://${__dirname}/main.html`);
     mainWindow.on('closed', () => app.quit());
 
@@ -17,12 +17,19 @@ app.on('ready', () => {
 
 function createAddWindow() {
     addWindow = new BrowserWindow({
+        webPreferences: { nodeIntegration: true },
         title: 'Add New Todo',
         width: 600,
         height: 400,
     });
     addWindow.loadURL(`file://${__dirname}/addTodo.html`);
 }
+
+ipcMain.on('todo:add', (event, todo) => {
+    mainWindow.webContents.send('todo:app', todo);
+    addWindow.close();
+
+});
 
 const menuTemplate = [
     {
@@ -45,4 +52,21 @@ const menuTemplate = [
 
 if (process.platform === 'darwin') {
     menuTemplate.unshift({ label: '' });
+}
+
+if (process.env.NODE_ENV !== 'production') {
+    menuTemplate.push({
+        label: 'Developer Console',
+        submenu: [
+            {
+                label: 'Toggle Developer Tools',
+                accelerator: process.platform === 'darwin' ? 'Command+Alt+I' : 'Ctrl+Shift+I',
+                click(index, focusedWindow) {
+                    focusedWindow.toggleDevTools();
+                }
+            }
+        ]
+
+    });
+
 }

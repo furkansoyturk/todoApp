@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <form action="">
+    <form>
       <div>
-        <label for="">Enter Todo:</label>
+        <label>Enter Todo:</label>
         <input autofocus /> <button type="submit">Add</button>
       </div>
     </form>
+
+    <script>
+      const electron = require('electron');
+      const { ipcRenderer } = electron;
+
+      document.querySelector('form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        debugger;
+
+        const { value } = document.querySelector('input');
+        ipcRenderer.send('todo:add', value);
+      });
+    </script>
   </body>
 </html>
